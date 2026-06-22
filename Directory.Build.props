@@ -34,6 +34,11 @@
     <BepInExPlugins>$(GamePath)\BepInEx\plugins</BepInExPlugins>
   </PropertyGroup>
 
+  <!-- Define the COTL_API compile symbol only when the API is installed (optional integration). -->
+  <PropertyGroup Condition="Exists('$(BepInExPlugins)\io.github.xhayper.COTL_API\COTL_API.dll')">
+    <DefineConstants>$(DefineConstants);COTL_API</DefineConstants>
+  </PropertyGroup>
+
   <Target Name="CheckGamePath" BeforeTargets="ResolveReferences">
     <Error Condition="!Exists('$(ManagedPath)\Assembly-CSharp.dll')"
            Text="Assembly-CSharp.dll not found under '$(ManagedPath)'. Set GamePath / COTL_GAMEPATH to the folder containing Cult of the Lamb.exe." />
@@ -62,6 +67,13 @@
     </Reference>
     <Reference Include="0Harmony">
       <HintPath>$(BepInExCore)\0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+
+    <!-- COTL_API is OPTIONAL: referenced only if installed (soft runtime dependency). Code that
+         uses it is guarded by a presence check so the mod loads fine without COTL_API. -->
+    <Reference Include="COTL_API" Condition="Exists('$(BepInExPlugins)\io.github.xhayper.COTL_API\COTL_API.dll')">
+      <HintPath>$(BepInExPlugins)\io.github.xhayper.COTL_API\COTL_API.dll</HintPath>
       <Private>false</Private>
     </Reference>
 

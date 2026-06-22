@@ -14,6 +14,7 @@ using UnityEngine;
 namespace SoberFurry.MultiNecklaces;
 
 [BepInPlugin(Guid, "SoberFurry MultiNecklaces", "1.1.0")]
+[BepInDependency("io.github.xhayper.COTL_API", BepInDependency.DependencyFlags.SoftDependency)]
 public sealed class Plugin : BaseUnityPlugin
 {
     public const string Guid = "com.soberfurry.cultofthelamb.multinecklaces";
@@ -38,6 +39,10 @@ public sealed class Plugin : BaseUnityPlugin
             _harmony.PatchAll(typeof(Plugin).Assembly); // discovers all [HarmonyPatch] classes (incl. effect-stacking IL patches)
 
             ManagementUI.Create();
+
+#if COTL_API
+            CotlApiIntegration.TryRegisterSettings(); // optional: in-game "Mods" tab if COTL_API present
+#endif
 
             // Persist on quit as a safety net.
             Application.quitting += () => { try { NecklaceService.Instance.Persist(); } catch { } };
