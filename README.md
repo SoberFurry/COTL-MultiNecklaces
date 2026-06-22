@@ -5,6 +5,9 @@ BepInEx-мод для **Cult of the Lamb**: один последователь 
 
 **Версия:** 1.0.0 · **Зависимость:** BepInEx 5.4.x · **Автор:** [SoberFurry](https://github.com/SoberFurry)
 
+## Демонстрация
+![Круговое меню ожерелий](docs/images/wheel.gif)
+
 ## Установка
 Скачай из [Releases](../../releases) и распакуй в:
 ```
@@ -32,9 +35,8 @@ dotnet build src/Sam.MultiNecklaces/Sam.MultiNecklaces.csproj -c Release -p:Game
 ## Другие мои моды для Cult of the Lamb
 - [MultiNecklaces](https://github.com/SoberFurry/COTL-MultiNecklaces) — несколько ожерелий на последователе
 - [ConfirmIndoctrination](https://github.com/SoberFurry/COTL-ConfirmIndoctrination) — подтверждение при принятии последователя
-- Все моды автора: https://github.com/SoberFurry?tab=repositories
 
 ## Лицензия
-Автор: **SoberFurry**. Разрешено только **скачивание и использование** — изменение, переиздание и
+Автор: [SoberFurry](https://github.com/SoberFurry). Разрешено только **скачивание и использование** — изменение, переиздание и
 коммерческое использование запрещены без разрешения автора (см. [LICENSE](LICENSE)).
 Мод не содержит файлов игры.
