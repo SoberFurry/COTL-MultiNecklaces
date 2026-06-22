@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Sam.MultiNecklaces.Models;
+using SoberFurry.MultiNecklaces.Models;
 using UnityEngine;
 
-namespace Sam.MultiNecklaces.Core;
+namespace SoberFurry.MultiNecklaces.Core;
 
 internal readonly struct OpResult
 {

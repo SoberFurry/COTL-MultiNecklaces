@@ -3,21 +3,21 @@ using System.Security.Permissions;
 using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
-using Sam.MultiNecklaces.Core;
-using Sam.MultiNecklaces.UI;
+using SoberFurry.MultiNecklaces.Core;
+using SoberFurry.MultiNecklaces.UI;
 using UnityEngine;
 
 #pragma warning disable CS0618
 [assembly: SecurityPermission(System.Security.Permissions.SecurityAction.RequestMinimum, SkipVerification = true)]
 #pragma warning restore CS0618
 
-namespace Sam.MultiNecklaces;
+namespace SoberFurry.MultiNecklaces;
 
-[BepInPlugin(Guid, "Sam MultiNecklaces", "1.0.0")]
+[BepInPlugin(Guid, "SoberFurry MultiNecklaces", "1.0.0")]
 public sealed class Plugin : BaseUnityPlugin
 {
-    public const string Guid = "com.sam.cultofthelamb.multinecklaces";
-    private const string LogPrefix = "Sam.MultiNecklaces";
+    public const string Guid = "com.soberfurry.cultofthelamb.multinecklaces";
+    private const string LogPrefix = "SoberFurry.MultiNecklaces";
 
     internal static ManualLogSource Log = null!;
     internal static PluginConfig Cfg = null!;

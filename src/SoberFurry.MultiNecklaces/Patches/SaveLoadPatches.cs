@@ -1,8 +1,8 @@
 using System;
 using HarmonyLib;
-using Sam.MultiNecklaces.Core;
+using SoberFurry.MultiNecklaces.Core;
 
-namespace Sam.MultiNecklaces.Patches;
+namespace SoberFurry.MultiNecklaces.Patches;
 
 /// <summary>Loads our per-slot data when the game loads a save slot.</summary>
 [HarmonyPatch]

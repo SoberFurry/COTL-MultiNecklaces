@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Sam.MultiNecklaces.Core;
+namespace SoberFurry.MultiNecklaces.Core;
 
 /// <summary>Helpers around the <c>InventoryItem.ITEM_TYPE</c> necklace values.</summary>
 internal static class NecklaceTypes

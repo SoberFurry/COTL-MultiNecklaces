@@ -1,19 +1,19 @@
-# Sam MultiNecklaces
+# SoberFurry MultiNecklaces
 
 A BepInEx plugin for **Cult of the Lamb**: one follower can wear **several different necklaces** at
 once. All equipped necklaces stay active; only one chosen ("visible") necklace is shown on the model,
 the others keep working while hidden.
 
 - Version: **1.5.0**
-- GUID: `com.sam.cultofthelamb.multinecklaces`
+- GUID: `com.soberfurry.cultofthelamb.multinecklaces`
 - Built against: Unity 2022.3.62f2, build 22885603
 - Dependencies: BepInEx 5.4.x (COTL pack), COTL_API 0.3.4 (soft)
 
 ## Install (players)
 ```
-<GameFolder>\BepInEx\plugins\SamMods\MultiNecklaces\
+<GameFolder>\BepInEx\plugins\SoberFurryMods\MultiNecklaces\
 ```
-Config is created on first run at `BepInEx\config\com.sam.cultofthelamb.multinecklaces.cfg`.
+Config is created on first run at `BepInEx\config\com.soberfurry.cultofthelamb.multinecklaces.cfg`.
 
 ## How to use — in the follower's radial wheel
 Management is built into the **follower interaction wheel** (same wheel as "Give work" etc.):
@@ -63,7 +63,7 @@ The remaining effects are inline in large game methods and will be added one by 
 ## Build from source
 .NET SDK 8 and the game installed with BepInEx + COTL_API:
 ```
-dotnet build src/Sam.MultiNecklaces/Sam.MultiNecklaces.csproj -c Release -p:GamePath="X:\path\to\Cult of the Lamb"
+dotnet build src/SoberFurry.MultiNecklaces/SoberFurry.MultiNecklaces.csproj -c Release -p:GamePath="X:\path\to\Cult of the Lamb"
 ```
 Or set the `COTL_GAMEPATH` environment variable. Game DLLs are referenced by `HintPath` and are not
 committed to the repo.

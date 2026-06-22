@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Sam.MultiNecklaces.Models;
+namespace SoberFurry.MultiNecklaces.Models;
 
 internal enum EntryState
 {

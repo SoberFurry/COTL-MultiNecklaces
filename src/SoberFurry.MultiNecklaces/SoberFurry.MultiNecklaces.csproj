@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>Sam.MultiNecklaces</AssemblyName>
-    <RootNamespace>Sam.MultiNecklaces</RootNamespace>
-    <Product>Sam MultiNecklaces</Product>
+    <AssemblyName>SoberFurry.MultiNecklaces</AssemblyName>
+    <RootNamespace>SoberFurry.MultiNecklaces</RootNamespace>
+    <Product>SoberFurry MultiNecklaces</Product>
     <Version>1.0.0</Version>
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
     <EmbedAllSources>true</EmbedAllSources>

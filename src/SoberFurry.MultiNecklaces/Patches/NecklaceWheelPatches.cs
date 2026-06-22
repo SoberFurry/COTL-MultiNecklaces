@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
 using Lamb.UI.FollowerInteractionWheel;
-using Sam.MultiNecklaces.Core;
+using SoberFurry.MultiNecklaces.Core;
 using UnityEngine;
 
-namespace Sam.MultiNecklaces.Patches;
+namespace SoberFurry.MultiNecklaces.Patches;
 
 /// <summary>
 /// Necklace management inside the follower's radial command wheel.

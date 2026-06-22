@@ -2,10 +2,10 @@ using System;
 using System.Collections;
 using System.Reflection;
 using HarmonyLib;
-using Sam.MultiNecklaces.Core;
+using SoberFurry.MultiNecklaces.Core;
 using UnityEngine;
 
-namespace Sam.MultiNecklaces.Patches;
+namespace SoberFurry.MultiNecklaces.Patches;
 
 /// <summary>
 /// Makes the normal follower interaction wheel support multiple necklaces.

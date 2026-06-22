@@ -1,8 +1,8 @@
 using System;
 using HarmonyLib;
-using Sam.MultiNecklaces.Core;
+using SoberFurry.MultiNecklaces.Core;
 
-namespace Sam.MultiNecklaces.Patches;
+namespace SoberFurry.MultiNecklaces.Patches;
 
 /// <summary>
 /// Effect-stacking for the necklaces whose effect is read through a clean instance method on

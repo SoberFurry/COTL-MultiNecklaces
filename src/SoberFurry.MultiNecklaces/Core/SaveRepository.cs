@@ -1,14 +1,14 @@
 using System;
 using System.IO;
 using Newtonsoft.Json;
-using Sam.MultiNecklaces.Models;
+using SoberFurry.MultiNecklaces.Models;
 using UnityEngine;
 
-namespace Sam.MultiNecklaces.Core;
+namespace SoberFurry.MultiNecklaces.Core;
 
 /// <summary>
 /// Per-slot JSON persistence with atomic writes, one rolling backup, and a pre-migration backup.
-/// Files live next to the vanilla saves: <c>{persistentDataPath}/saves/Sam.MultiNecklaces.slot{N}.json</c>.
+/// Files live next to the vanilla saves: <c>{persistentDataPath}/saves/SoberFurry.MultiNecklaces.slot{N}.json</c>.
 /// </summary>
 internal sealed class SaveRepository
 {
@@ -21,9 +21,11 @@ internal sealed class SaveRepository
 
     private string SavesDir => Path.Combine(Application.persistentDataPath, "saves");
 
-    private string FileFor(int slot) => Path.Combine(SavesDir, $"Sam.MultiNecklaces.slot{slot}.json");
+    private string FileFor(int slot) => Path.Combine(SavesDir, $"SoberFurry.MultiNecklaces.slot{slot}.json");
     private string TempFor(int slot) => FileFor(slot) + ".tmp";
     private string BakFor(int slot) => FileFor(slot) + ".bak";
+    // Legacy file name from the pre-rename build (Sam.* -> SoberFurry.*); read once for migration.
+    private string LegacyFileFor(int slot) => Path.Combine(SavesDir, $"Sam.MultiNecklaces.slot{slot}.json");
 
     public int CurrentSlot
     {
@@ -50,6 +52,18 @@ internal sealed class SaveRepository
                     {
                         Plugin.Log.LogWarning($"Main save missing; recovered slot {slot} from backup.");
                         return Migrate(recovered, slot);
+                    }
+                }
+                // Migrate data from the old (pre-rename) save file if present.
+                if (File.Exists(LegacyFileFor(slot)))
+                {
+                    var legacy = TryRead(LegacyFileFor(slot));
+                    if (legacy != null)
+                    {
+                        Plugin.Log.LogInfo($"Migrated slot {slot} from legacy save (Sam.MultiNecklaces).");
+                        var migrated = Migrate(legacy, slot);
+                        Save(migrated, slot);
+                        return migrated;
                     }
                 }
                 var fresh = new MultiNecklacesSave { GameSaveIdentity = slot.ToString() };
@@ -167,7 +181,7 @@ internal sealed class SaveRepository
             string marker = FileFor(slot) + ".vanillabackupdone";
             if (File.Exists(marker)) return;
             string dir = SavesDir;
-            string backupDir = Path.Combine(dir, $"Sam.MultiNecklaces.vanillabackup.slot{slot}");
+            string backupDir = Path.Combine(dir, $"SoberFurry.MultiNecklaces.vanillabackup.slot{slot}");
             Directory.CreateDirectory(backupDir);
             foreach (string pattern in new[] { $"slot_{slot}.mp", $"meta_{slot}.mp" })
             {

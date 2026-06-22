@@ -3,11 +3,11 @@ using System.Reflection;
 using System.Text;
 using HarmonyLib;
 using Lamb.UI;
-using Sam.MultiNecklaces.Core;
+using SoberFurry.MultiNecklaces.Core;
 using TMPro;
 using UnityEngine;
 
-namespace Sam.MultiNecklaces.Patches;
+namespace SoberFurry.MultiNecklaces.Patches;
 
 /// <summary>
 /// Shows EVERY equipped necklace (visible and hidden) in the "Read thoughts" / follower summary

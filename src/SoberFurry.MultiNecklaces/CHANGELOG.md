@@ -1,4 +1,4 @@
-# Changelog — Sam MultiNecklaces
+# Changelog — SoberFurry MultiNecklaces
 
 ## 1.0.0 — первый выпуск
 - Несколько разных ожерелий на одном последователе; дубликаты одного типа запрещены.

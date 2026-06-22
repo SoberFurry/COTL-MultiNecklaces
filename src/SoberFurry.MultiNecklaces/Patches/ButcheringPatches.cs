@@ -1,9 +1,9 @@
 using System;
 using HarmonyLib;
-using Sam.MultiNecklaces.Core;
+using SoberFurry.MultiNecklaces.Core;
 using UnityEngine;
 
-namespace Sam.MultiNecklaces.Patches;
+namespace SoberFurry.MultiNecklaces.Patches;
 
 /// <summary>
 /// Drops every remaining (hidden) necklace once butchering of a body completes.

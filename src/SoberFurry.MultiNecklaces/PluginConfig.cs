@@ -1,7 +1,7 @@
 using BepInEx.Configuration;
 using UnityEngine;
 
-namespace Sam.MultiNecklaces;
+namespace SoberFurry.MultiNecklaces;
 
 internal enum ButcherReturn
 {

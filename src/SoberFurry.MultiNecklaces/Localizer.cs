@@ -5,7 +5,7 @@ using System.Reflection;
 using BepInEx.Logging;
 using Newtonsoft.Json.Linq;
 
-namespace Sam.MultiNecklaces;
+namespace SoberFurry.MultiNecklaces;
 
 /// <summary>Minimal localization: embedded ru/en json, English fallback.</summary>
 internal static class Localizer

@@ -1,6 +1,6 @@
 using System;
 
-namespace Sam.MultiNecklaces.Core;
+namespace SoberFurry.MultiNecklaces.Core;
 
 /// <summary>
 /// Mirrors the vanilla "gift necklace" / "remove necklace" loyalty effects for our extra-necklace

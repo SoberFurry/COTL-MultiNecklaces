@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Sam.MultiNecklaces.Core;
+using SoberFurry.MultiNecklaces.Core;
 using UnityEngine;
 
-namespace Sam.MultiNecklaces.UI;
+namespace SoberFurry.MultiNecklaces.UI;
 
 /// <summary>
 /// Periodic reconciliation + the IMGUI necklace-management panel for the follower nearest the player.
@@ -29,7 +29,7 @@ internal sealed class ManagementUI : MonoBehaviour
 
     public static ManagementUI Create()
     {
-        var go = new GameObject("Sam.MultiNecklaces.UI");
+        var go = new GameObject("SoberFurry.MultiNecklaces.UI");
         DontDestroyOnLoad(go);
         go.hideFlags = HideFlags.HideAndDontSave;
         return go.AddComponent<ManagementUI>();
