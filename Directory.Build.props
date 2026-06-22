@@ -1,0 +1,106 @@
+<Project>
+
+  <!--
+    Shared build configuration for both Sam mods.
+    GamePath can be overridden:
+      - environment variable COTL_GAMEPATH
+      - msbuild property:  dotnet build -p:GamePath="X:\path\to\Cult of the Lamb"
+    Game DLLs are referenced via HintPath only and are NEVER copied to output
+    or committed to the repository (Private=false).
+  -->
+
+  <PropertyGroup>
+    <!-- BepInEx 5 runs on Unity Mono. We reference the GAME's own BCL (mscorlib/System/netstandard)
+         so assembly identities match what the game assemblies bind to (mscorlib 2.0.0.0 etc.).
+         Implicit framework references are disabled to avoid identity clashes. -->
+    <TargetFramework>net472</TargetFramework>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <AssemblySearchPaths>$(AssemblySearchPaths);{HintPathFromItem}</AssemblySearchPaths>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <DebugType>portable</DebugType>
+    <Deterministic>true</Deterministic>
+    <NoWarn>$(NoWarn);CS0436</NoWarn>
+  </PropertyGroup>
+
+  <!-- Resolve the installed game path. -->
+  <PropertyGroup>
+    <GamePath Condition="'$(GamePath)' == '' and '$(COTL_GAMEPATH)' != ''">$(COTL_GAMEPATH)</GamePath>
+    <GamePath Condition="'$(GamePath)' == ''">H:\SteamLibrary\steamapps\common\Cult of the Lamb</GamePath>
+    <ManagedPath>$(GamePath)\Cult Of The Lamb_Data\Managed</ManagedPath>
+    <BepInExCore>$(GamePath)\BepInEx\core</BepInExCore>
+    <BepInExPlugins>$(GamePath)\BepInEx\plugins</BepInExPlugins>
+  </PropertyGroup>
+
+  <Target Name="CheckGamePath" BeforeTargets="ResolveReferences">
+    <Error Condition="!Exists('$(ManagedPath)\Assembly-CSharp.dll')"
+           Text="Assembly-CSharp.dll not found under '$(ManagedPath)'. Set GamePath / COTL_GAMEPATH to the folder containing Cult of the Lamb.exe." />
+  </Target>
+
+  <ItemGroup>
+    <!-- Game's own BCL — matches the assembly identities the game DLLs reference. -->
+    <Reference Include="mscorlib"><HintPath>$(ManagedPath)\mscorlib.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="System"><HintPath>$(ManagedPath)\System.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="System.Core"><HintPath>$(ManagedPath)\System.Core.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="System.Xml"><HintPath>$(ManagedPath)\System.Xml.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="netstandard"><HintPath>$(ManagedPath)\netstandard.dll</HintPath><Private>false</Private></Reference>
+    <!-- Odin (UIMenuBase derives from Sirenix SerializedMonoBehaviour) + MessagePack (FollowerInfo attrs). -->
+    <Reference Include="Sirenix.Serialization"><HintPath>$(ManagedPath)\Sirenix.Serialization.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Sirenix.OdinInspector.Attributes"><HintPath>$(ManagedPath)\Sirenix.OdinInspector.Attributes.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Sirenix.Utilities"><HintPath>$(ManagedPath)\Sirenix.Utilities.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="MessagePack"><HintPath>$(ManagedPath)\MessagePack.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="MessagePack.Annotations"><HintPath>$(ManagedPath)\MessagePack.Annotations.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- BepInEx + Harmony -->
+    <Reference Include="BepInEx">
+      <HintPath>$(BepInExCore)\BepInEx.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="0Harmony">
+      <HintPath>$(BepInExCore)\0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+
+    <!-- COTL_API (optional: referenced only if installed; ConfirmIndoctrination does not need it). -->
+    <Reference Include="COTL_API" Condition="Exists('$(BepInExPlugins)\io.github.xhayper.COTL_API\COTL_API.dll')">
+      <HintPath>$(BepInExPlugins)\io.github.xhayper.COTL_API\COTL_API.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+
+    <!-- Game assemblies -->
+    <Reference Include="Assembly-CSharp">
+      <HintPath>$(ManagedPath)\Assembly-CSharp.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>$(ManagedPath)\Assembly-CSharp-firstpass.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>$(ManagedPath)\Newtonsoft.Json.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+
+    <!-- Unity engine modules -->
+    <Reference Include="UnityEngine"><HintPath>$(ManagedPath)\UnityEngine.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.CoreModule"><HintPath>$(ManagedPath)\UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.UI"><HintPath>$(ManagedPath)\UnityEngine.UI.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.UIModule"><HintPath>$(ManagedPath)\UnityEngine.UIModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.IMGUIModule"><HintPath>$(ManagedPath)\UnityEngine.IMGUIModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.TextRenderingModule"><HintPath>$(ManagedPath)\UnityEngine.TextRenderingModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.InputLegacyModule"><HintPath>$(ManagedPath)\UnityEngine.InputLegacyModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.PhysicsModule"><HintPath>$(ManagedPath)\UnityEngine.PhysicsModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.Physics2DModule"><HintPath>$(ManagedPath)\UnityEngine.Physics2DModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.AnimationModule"><HintPath>$(ManagedPath)\UnityEngine.AnimationModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.AssetBundleModule"><HintPath>$(ManagedPath)\UnityEngine.AssetBundleModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Unity.TextMeshPro"><HintPath>$(ManagedPath)\Unity.TextMeshPro.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="spine-unity"><HintPath>$(ManagedPath)\spine-unity.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="DOTween"><HintPath>$(ManagedPath)\DOTween.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Rewired_Core"><HintPath>$(ManagedPath)\Rewired_Core.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+
+</Project>

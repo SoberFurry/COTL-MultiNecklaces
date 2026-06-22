@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Sam.MultiNecklaces</AssemblyName>
+    <RootNamespace>Sam.MultiNecklaces</RootNamespace>
+    <Product>Sam MultiNecklaces</Product>
+    <Version>1.5.0</Version>
+    <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+    <EmbedAllSources>true</EmbedAllSources>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Localization\en.json" />
+    <EmbeddedResource Include="Localization\ru.json" />
+  </ItemGroup>
+
+</Project>

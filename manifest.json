@@ -1,0 +1,10 @@
+{
+  "name": "Sam_MultiNecklaces",
+  "version_number": "1.0.0",
+  "website_url": "",
+  "description": "Wear several different necklaces on one follower; effects of hidden necklaces stay active.",
+  "dependencies": [
+    "BepInEx-BepInExPack_CultOfTheLamb-5.4.21",
+    "xhayper-COTL_API-0.3.4"
+  ]
+}
