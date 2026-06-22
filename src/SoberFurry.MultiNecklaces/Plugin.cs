@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace SoberFurry.MultiNecklaces;
 
-[BepInPlugin(Guid, "SoberFurry MultiNecklaces", "1.0.0")]
+[BepInPlugin(Guid, "SoberFurry MultiNecklaces", "1.1.0")]
 public sealed class Plugin : BaseUnityPlugin
 {
     public const string Guid = "com.soberfurry.cultofthelamb.multinecklaces";
@@ -28,19 +28,14 @@ public sealed class Plugin : BaseUnityPlugin
     private void Awake()
     {
         Log = Logger;
-        Log.LogInfo($"[{LogPrefix}] starting v1.0.0");
+        Log.LogInfo($"[{LogPrefix}] starting v1.1.0");
         try
         {
             Cfg = new PluginConfig(base.Config);
             Localizer.Init(Log);
 
             _harmony = new Harmony(Guid);
-            _harmony.PatchAll(typeof(Patches.EffectPatches));
-            _harmony.PatchAll(typeof(Patches.ButcheringPatches));
-            _harmony.PatchAll(typeof(Patches.SaveLoadPatches));
-            _harmony.PatchAll(typeof(Patches.GiftWheelPatches));
-            _harmony.PatchAll(typeof(Patches.NecklaceWheelPatches));
-            _harmony.PatchAll(typeof(Patches.SummaryPatches));
+            _harmony.PatchAll(typeof(Plugin).Assembly); // discovers all [HarmonyPatch] classes (incl. effect-stacking IL patches)
 
             ManagementUI.Create();
 
