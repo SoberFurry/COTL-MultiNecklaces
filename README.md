@@ -3,7 +3,7 @@
 BepInEx-мод для **Cult of the Lamb**: один последователь может носить **несколько ожерелий** сразу.
 Эффекты всех надетых действуют, на модели видно одно выбранное, остальные работают скрытыми.
 
-**Версия:** 1.5.1 · **Зависимость:** BepInEx 5.4.x
+**Версия:** 1.0.0 · **Зависимость:** BepInEx 5.4.x · **Автор:** [SoberFurry](https://github.com/SoberFurry)
 
 ## Установка
 Скачай из [Releases](../../releases) и распакуй в:
@@ -29,5 +29,12 @@ BepInEx-мод для **Cult of the Lamb**: один последователь 
 dotnet build src/Sam.MultiNecklaces/Sam.MultiNecklaces.csproj -c Release -p:GamePath="X:\путь\к\Cult of the Lamb"
 ```
 
+## Другие мои моды для Cult of the Lamb
+- [MultiNecklaces](https://github.com/SoberFurry/COTL-MultiNecklaces) — несколько ожерелий на последователе
+- [ConfirmIndoctrination](https://github.com/SoberFurry/COTL-ConfirmIndoctrination) — подтверждение при принятии последователя
+- Все моды автора: https://github.com/SoberFurry?tab=repositories
+
 ## Лицензия
-MIT. Мод не содержит файлов игры.
+Автор: **SoberFurry**. Разрешено только **скачивание и использование** — изменение, переиздание и
+коммерческое использование запрещены без разрешения автора (см. [LICENSE](LICENSE)).
+Мод не содержит файлов игры.

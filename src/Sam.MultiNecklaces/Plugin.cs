@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace Sam.MultiNecklaces;
 
-[BepInPlugin(Guid, "Sam MultiNecklaces", "1.5.1")]
+[BepInPlugin(Guid, "Sam MultiNecklaces", "1.0.0")]
 public sealed class Plugin : BaseUnityPlugin
 {
     public const string Guid = "com.sam.cultofthelamb.multinecklaces";
@@ -28,7 +28,7 @@ public sealed class Plugin : BaseUnityPlugin
     private void Awake()
     {
         Log = Logger;
-        Log.LogInfo($"[{LogPrefix}] starting v1.5.1");
+        Log.LogInfo($"[{LogPrefix}] starting v1.0.0");
         try
         {
             Cfg = new PluginConfig(base.Config);
