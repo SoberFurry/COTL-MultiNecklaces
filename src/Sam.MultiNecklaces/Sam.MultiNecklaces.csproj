@@ -4,7 +4,7 @@
     <AssemblyName>Sam.MultiNecklaces</AssemblyName>
     <RootNamespace>Sam.MultiNecklaces</RootNamespace>
     <Product>Sam MultiNecklaces</Product>
-    <Version>1.5.0</Version>
+    <Version>1.5.1</Version>
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
     <EmbedAllSources>true</EmbedAllSources>
   </PropertyGroup>

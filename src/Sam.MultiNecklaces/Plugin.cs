@@ -13,8 +13,7 @@ using UnityEngine;
 
 namespace Sam.MultiNecklaces;
 
-[BepInPlugin(Guid, "Sam MultiNecklaces", "1.5.0")]
-[BepInDependency("io.github.xhayper.COTL_API", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInPlugin(Guid, "Sam MultiNecklaces", "1.5.1")]
 public sealed class Plugin : BaseUnityPlugin
 {
     public const string Guid = "com.sam.cultofthelamb.multinecklaces";
@@ -29,7 +28,7 @@ public sealed class Plugin : BaseUnityPlugin
     private void Awake()
     {
         Log = Logger;
-        Log.LogInfo($"[{LogPrefix}] starting v1.5.0");
+        Log.LogInfo($"[{LogPrefix}] starting v1.5.1");
         try
         {
             Cfg = new PluginConfig(base.Config);
