@@ -9,10 +9,22 @@ namespace SoberFurry.MultiNecklaces.Core;
 /// </summary>
 internal static class NecklaceRewards
 {
-    public static void OnEquip(Follower follower, InventoryItem.ITEM_TYPE type)
+    public static void OnEquip(Follower follower, FollowerInfo info, InventoryItem.ITEM_TYPE type)
     {
-        try { follower?.Brain?.AddAdoration(FollowerBrain.AdorationActions.Necklace, () => { }); }
+        // Vanilla grants follower adoration (XP / level-up) ONLY for the first necklace a follower
+        // ever receives (the HasReceivedNecklace flag). Without this gate, give -> remove -> give
+        // would farm levels. Mirror the vanilla rule to prevent that exploit.
+        try
+        {
+            if (info != null && !info.HasReceivedNecklace)
+            {
+                follower?.Brain?.AddAdoration(FollowerBrain.AdorationActions.Necklace, () => { });
+                info.HasReceivedNecklace = true;
+            }
+        }
         catch (Exception e) { Plugin.Log.LogWarning($"AddAdoration failed: {e.Message}"); }
+
+        // The small cult-faith thought for giving an item is fine to keep (it is not follower XP).
         try { CultFaithManager.AddThought(Thought.Cult_GaveFollowerItem, -1, 7f, InventoryItem.LocalizedName(type)); }
         catch (Exception e) { Plugin.Log.LogWarning($"GaveFollowerItem thought failed: {e.Message}"); }
     }

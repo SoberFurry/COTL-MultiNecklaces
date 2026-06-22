@@ -63,7 +63,7 @@ internal static class GiftWheelPatches
         if (r.Ok)
         {
             try { AudioManager.Instance.PlayOneShot("event:/followers/gain_loyalty", f.transform.position); } catch { }
-            NecklaceRewards.OnEquip(f, type); // loyalty/adoration like the vanilla gift
+            NecklaceRewards.OnEquip(f, info, type); // loyalty/adoration like vanilla (first necklace only)
         }
         yield return new WaitForSeconds(0.1f);
         CloseInteraction(inst);
