@@ -67,6 +67,7 @@ internal static class NecklaceWheelPatches
 
             var svc = NecklaceService.Instance;
             svc.EnsureImported(info);
+            svc.ApplyVisibleToVanilla(info); // reconcile model to our data right before showing the menu
             var entries = svc.GetEntries(info.ID);
             if (entries.Count == 0) return;
 

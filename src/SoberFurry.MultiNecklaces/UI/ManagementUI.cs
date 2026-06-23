@@ -15,8 +15,6 @@ namespace SoberFurry.MultiNecklaces.UI;
 /// </summary>
 internal sealed class ManagementUI : MonoBehaviour
 {
-    private const float SyncIntervalSeconds = 2f;
-    private float _nextSync;
     private bool _open;
     private FollowerInfo? _target;
     private Vector3 _targetPos;
@@ -40,30 +38,11 @@ internal sealed class ManagementUI : MonoBehaviour
         try
         {
             if (!Plugin.Cfg.Enabled.Value) return;
-
-            if (Time.unscaledTime >= _nextSync)
-            {
-                _nextSync = Time.unscaledTime + SyncIntervalSeconds;
-                SyncTick();
-            }
-
+            // No per-frame polling: reconciliation happens on demand (save load, wheel open, panel open).
             if (Input.GetKeyDown(Plugin.Cfg.PanelHotkey.Value))
                 Toggle();
         }
         catch (Exception e) { Plugin.Log.LogError($"ManagementUI.Update failed: {e}"); }
-    }
-
-    private void SyncTick()
-    {
-        var dm = DataManager.Instance;
-        if (dm?.Followers == null) return;
-        foreach (var info in dm.Followers)
-        {
-            if (info == null) continue;
-            NecklaceService.Instance.EnsureImported(info);
-            // Keep the model authoritatively in sync with our data (prevents desync / dup-on-remove).
-            NecklaceService.Instance.ApplyVisibleToVanilla(info);
-        }
     }
 
     private void Toggle()
@@ -93,6 +72,9 @@ internal sealed class ManagementUI : MonoBehaviour
             {
                 _target = nearest.Brain._directInfoAccess;
                 _targetPos = nearest.transform.position;
+                // Reconcile on demand (no per-frame polling).
+                NecklaceService.Instance.EnsureImported(_target);
+                NecklaceService.Instance.ApplyVisibleToVanilla(_target);
             }
         }
         catch (Exception e) { Plugin.Log.LogWarning($"AcquireTarget failed: {e.Message}"); }

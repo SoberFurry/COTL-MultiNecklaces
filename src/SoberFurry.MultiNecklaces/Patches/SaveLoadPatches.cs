@@ -15,6 +15,15 @@ internal static class SaveLoadPatches
         try
         {
             NecklaceService.Instance.Load();
+            // One-time reconcile of already-loaded followers (no per-frame polling needed afterwards).
+            try
+            {
+                var dm = DataManager.Instance;
+                if (dm?.Followers != null)
+                    foreach (var info in dm.Followers)
+                        if (info != null) NecklaceService.Instance.ApplyVisibleToVanilla(info);
+            }
+            catch { }
             Plugin.Log.LogInfo($"Mod loadouts loaded for save slot {saveSlot}.");
         }
         catch (Exception e)
