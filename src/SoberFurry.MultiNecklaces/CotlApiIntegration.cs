@@ -20,6 +20,7 @@ internal static class CotlApiIntegration
     {
         try
         {
+            if (Plugin.Cfg == null || !Plugin.Cfg.UseInGameSettings.Value) return; // off by default (Mods tab can freeze on some builds)
             if (!Chainloader.PluginInfos.ContainsKey(ApiGuid)) return; // COTL_API not loaded -> cfg only
             Register();
             Plugin.Log.LogInfo("Settings registered in the in-game COTL_API \"Mods\" tab.");
