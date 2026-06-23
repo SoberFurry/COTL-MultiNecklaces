@@ -22,7 +22,7 @@ internal static class NecklaceEffectAutoPatch
 {
     public static void ApplyAll(Harmony harmony)
     {
-        int patched = 0, scanned = 0;
+        int patched = 0, scanned = 0, skipped = 0;
         try
         {
             var asm = typeof(FollowerInfo).Assembly;
@@ -46,7 +46,10 @@ internal static class NecklaceEffectAutoPatch
                         if (!m.HasBody) continue;
                         if (m.Name == "get_Necklace" || m.Name == "set_Necklace") continue;
                         scanned++;
-                        if (ReadsNecklace(m)) tokens.Add(m.MetadataToken.ToInt32());
+                        if (!ReadsNecklace(m)) continue;
+                        // Skip methods covered by deterministic postfixes/prefixes (no double-count).
+                        if (HandledNames.Contains((m.DeclaringType?.Name ?? "") + "." + m.Name)) { skipped++; continue; }
+                        tokens.Add(m.MetadataToken.ToInt32());
                     }
                 }
             }
@@ -67,13 +70,28 @@ internal static class NecklaceEffectAutoPatch
                 }
             }
 
-            Plugin.Log.LogInfo($"[AutoPatch] hidden-effect stacking applied to {patched} method(s).");
+            Plugin.Log.LogInfo($"[AutoPatch] hidden-effect stacking applied to {patched} method(s); {skipped} handled deterministically.");
         }
         catch (Exception e)
         {
             Plugin.Log.LogError($"[AutoPatch] failed (effects may not fully stack): {e}");
         }
     }
+
+    // Methods covered by deterministic postfixes/prefixes (EffectPatches + GuaranteedSleepPatch).
+    // Matched by Cecil's own DeclaringType.Name + "." + method name (getters are "get_X").
+    private static readonly HashSet<string> HandledNames = new()
+    {
+        "FollowerInfo.GetDemonLevel",
+        "FollowerInfo.HasTraitFromNecklace",
+        "FollowerInfo.get_WorkThroughNight",
+        "FollowerBrain.get_DevotionToGive",
+        "FollowerBrain.get_ResourceHarvestingMultiplier",
+        "FollowerBrain.CanFreeze",
+        "FollowerBrain.MakeDissenter",
+        "FollowerBrainInfo.get_LifeExpectancy",
+        "FollowerBrainInfo.get_ProductivityMultiplier",
+    };
 
     private static bool ReadsNecklace(MethodDefinition m)
     {
