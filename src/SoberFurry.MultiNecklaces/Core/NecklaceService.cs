@@ -114,28 +114,27 @@ internal sealed class NecklaceService
 
     // ---- Import / sync with vanilla ----------------------------------------
 
-    /// <summary>If vanilla holds a necklace we don't track, import it (first = visible) without
-    /// removing hidden ones. Handles fresh saves and other mods changing the vanilla field.</summary>
+    /// <summary>Import the vanilla necklace ONLY into an empty loadout (the first necklace / fresh save).
+    /// Once we track necklaces, OUR data is authoritative — we never import from the vanilla field again
+    /// (that previously caused a removed necklace to be re-imported = duplication).</summary>
     public void EnsureImported(FollowerInfo info)
     {
         if (info == null || !ValidId(info.ID)) return;
+
+        var existing = Find(info.ID);
+        if (existing != null && existing.Equipped.Count > 0) return; // authoritative once populated
+
         var vanilla = info.Necklace;
         if (!NecklaceTypes.IsNecklace(vanilla)) return;
 
         var l = GetOrCreate(info.ID);
         string name = NecklaceTypes.Name(vanilla);
-        if (l.Equipped.All(e => e.NecklaceId != name))
-        {
-            l.Equipped.Add(new NecklaceEntry { NecklaceId = name, EquipOrder = ++_equipCounter });
-            Touch(l);
-            Plugin.Log.LogInfo($"[Import] follower {info.ID}: imported vanilla necklace {name} (loadout now {l.Equipped.Count}).");
-            Persist();
-        }
-        if (string.IsNullOrEmpty(l.VisibleNecklaceId))
-        {
-            l.VisibleNecklaceId = name;
-            Touch(l);
-        }
+        l.Equipped.Add(new NecklaceEntry { NecklaceId = name, EquipOrder = ++_equipCounter });
+        l.VisibleNecklaceId = name;
+        l.LastVisibleNecklaceId = name;
+        Touch(l);
+        Persist();
+        Plugin.Log.LogInfo($"[Import] follower {info.ID}: imported first necklace {name}.");
     }
 
     // ---- Mutations ----------------------------------------------------------
@@ -226,15 +225,20 @@ internal sealed class NecklaceService
         RefreshVisual(info);
     }
 
-    /// <summary>Re-asserts the vanilla bridge field from our data (used on load / after sync).</summary>
+    /// <summary>Authoritatively reconcile the vanilla bridge field to OUR visible necklace. Prevents the
+    /// model showing a necklace different from our data (which caused the dup-on-remove bug). Only
+    /// touches managed followers (those with a loadout); refreshes the model only when it actually changes.</summary>
     public void ApplyVisibleToVanilla(FollowerInfo info)
     {
         if (info == null || !ValidId(info.ID)) return;
-        var vis = GetVisible(info.ID);
-        if (vis.HasValue)
+        var l = Find(info.ID);
+        if (l == null) return; // unmanaged follower — leave vanilla alone
+        var desired = GetVisible(info.ID) ?? InventoryItem.ITEM_TYPE.NONE;
+        if (info.Necklace != desired)
         {
-            info.Necklace = vis.Value;
-            info.ShowingNecklace = true;
+            info.Necklace = desired;
+            info.ShowingNecklace = desired != InventoryItem.ITEM_TYPE.NONE;
+            RefreshVisual(info);
         }
     }
 

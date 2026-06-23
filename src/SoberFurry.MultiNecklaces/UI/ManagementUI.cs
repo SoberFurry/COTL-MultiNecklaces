@@ -61,9 +61,8 @@ internal sealed class ManagementUI : MonoBehaviour
         {
             if (info == null) continue;
             NecklaceService.Instance.EnsureImported(info);
-            // Restore the visible necklace if the vanilla field was cleared externally (e.g. scene load).
-            if (info.Necklace == InventoryItem.ITEM_TYPE.NONE && NecklaceService.Instance.GetVisible(info.ID).HasValue)
-                NecklaceService.Instance.ApplyVisibleToVanilla(info);
+            // Keep the model authoritatively in sync with our data (prevents desync / dup-on-remove).
+            NecklaceService.Instance.ApplyVisibleToVanilla(info);
         }
     }
 

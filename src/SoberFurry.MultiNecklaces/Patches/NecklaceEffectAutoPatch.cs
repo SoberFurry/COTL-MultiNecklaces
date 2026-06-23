@@ -89,6 +89,7 @@ internal static class NecklaceEffectAutoPatch
         "FollowerBrain.get_ResourceHarvestingMultiplier",
         "FollowerBrain.CanFreeze",
         "FollowerBrain.MakeDissenter",
+        "FollowerBrain.Die", // one-shot Deaths_Door: handled explicitly (consumed, not stacked hidden)
         "FollowerBrainInfo.get_LifeExpectancy",
         "FollowerBrainInfo.get_ProductivityMultiplier",
     };
