@@ -69,6 +69,10 @@
       <HintPath>$(BepInExCore)\0Harmony.dll</HintPath>
       <Private>false</Private>
     </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>$(BepInExCore)\Mono.Cecil.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
 
     <!-- COTL_API is OPTIONAL: referenced only if installed (soft runtime dependency). Code that
          uses it is guarded by a presence check so the mod loads fine without COTL_API. -->

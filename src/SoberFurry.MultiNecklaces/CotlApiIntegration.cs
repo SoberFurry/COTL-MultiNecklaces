@@ -33,15 +33,15 @@ internal static class CotlApiIntegration
     private static void Register()
     {
         var c = Plugin.Cfg;
-        const string cat = "Necklaces";
-        CustomSettingsManager.AddBepInExConfig(cat, "Enabled", c.Enabled);
-        CustomSettingsManager.AddBepInExConfig(cat, "Effect stacking (hidden)", c.EffectStacking);
-        CustomSettingsManager.AddBepInExConfig(cat, "Confirm rare unequip", c.ConfirmRareUnequip);
-        CustomSettingsManager.AddBepInExConfig(cat, "Verbose logging", c.VerboseLogging);
-        CustomSettingsManager.AddBepInExConfig(cat, "Max unique necklaces (0 = unlimited)",
+        string cat = Localizer.Get("settings.category");
+        CustomSettingsManager.AddBepInExConfig(cat, Localizer.Get("settings.enabled"), c.Enabled);
+        CustomSettingsManager.AddBepInExConfig(cat, Localizer.Get("settings.effectstacking"), c.EffectStacking);
+        CustomSettingsManager.AddBepInExConfig(cat, Localizer.Get("settings.confirmunequip"), c.ConfirmRareUnequip);
+        CustomSettingsManager.AddBepInExConfig(cat, Localizer.Get("settings.verbose"), c.VerboseLogging);
+        CustomSettingsManager.AddBepInExConfig(cat, Localizer.Get("settings.maxunique"),
             c.MaximumUniqueNecklaces, 1, MMSlider.ValueDisplayFormat.RawValue);
-        AddEnumDropdown(cat, "Butcher return mode", c.ButcherReturnMode);
-        AddEnumDropdown(cat, "Unknown necklace policy", c.UnknownNecklacePolicy);
+        AddEnumDropdown(cat, Localizer.Get("settings.butcher"), c.ButcherReturnMode);
+        AddEnumDropdown(cat, Localizer.Get("settings.unknownpolicy"), c.UnknownNecklacePolicy);
     }
 
     private static void AddEnumDropdown<T>(string category, string name, ConfigEntry<T> entry) where T : struct, Enum

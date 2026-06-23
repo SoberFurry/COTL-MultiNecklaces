@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -8,18 +7,17 @@ using SoberFurry.MultiNecklaces.Core;
 namespace SoberFurry.MultiNecklaces.Patches;
 
 /// <summary>
-/// Generic IL rewrite that makes the game's inline necklace checks consider ALL equipped necklaces
-/// (visible + hidden), so hidden-necklace effects stack.
+/// Transpiler helper used by <see cref="NecklaceEffectAutoPatch"/>. Rewrites every necklace check
+/// so it considers ALL equipped necklaces (visible + hidden), making hidden-necklace effects stack.
 ///
-/// The game reads the necklace two ways:
-///   A) <c>ldfld FollowerInfo.Necklace</c>            (direct field)
-///   B) <c>callvirt FollowerBrainInfo.get_Necklace</c> (property wrapper — the common case)
+/// Reads happen two ways:
+///   A) <c>ldfld FollowerInfo.Necklace</c>             (direct field)
+///   B) <c>callvirt FollowerBrainInfo.get_Necklace</c> (property wrapper)
 /// In both cases the instance is on the stack before the load. We turn the load into a Nop (leaving
 /// the instance) and turn the following comparison (<c>ceq | beq | bne.un</c>) into a call to a helper
-/// that returns true when the follower has that necklace equipped — visible OR hidden. This covers
-/// both <c>== X</c> and <c>!= X</c>.
+/// returning true when the follower has that necklace equipped — visible OR hidden. Covers == and !=.
 ///
-/// Fully defensive: methods without the pattern are left untouched; honours the EffectStacking toggle.
+/// Defensive: methods without the pattern are unchanged; honours the EffectStacking config toggle.
 /// </summary>
 internal static class NecklaceEffectIL
 {
@@ -70,7 +68,6 @@ internal static class NecklaceEffectIL
     public static IEnumerable<CodeInstruction> Rewrite(IEnumerable<CodeInstruction> instructions)
     {
         var list = new List<CodeInstruction>(instructions);
-        int rewritten = 0;
 
         for (int i = 0; i + 2 < list.Count; i++)
         {
@@ -90,7 +87,6 @@ internal static class NecklaceEffectIL
             bool isBne = cmp.opcode == OpCodes.Bne_Un || cmp.opcode == OpCodes.Bne_Un_S;
             if (!isCeq && !isBeq && !isBne) continue;
 
-            // necklace load -> Nop (instance stays on the stack); labels preserved.
             list[i].opcode = OpCodes.Nop;
             list[i].operand = null;
 
@@ -101,44 +97,12 @@ internal static class NecklaceEffectIL
             }
             else
             {
-                var target = cmp.operand; // branch Label
+                var target = cmp.operand;
                 cmp.opcode = OpCodes.Call;
                 cmp.operand = helper;
                 list.Insert(i + 3, new CodeInstruction(isBeq ? OpCodes.Brtrue : OpCodes.Brfalse, target));
             }
-            rewritten++;
         }
-
-        if (rewritten > 0) Plugin.Log.LogInfo($"[EffectIL] rewrote {rewritten} necklace check(s).");
         return list;
     }
 }
-
-// ---- Methods that hold inline necklace effects ----
-
-[HarmonyPatch(typeof(Follower), "UpdateMovement")]                                       // speed (Necklace_2)
-internal static class Patch_Follower_UpdateMovement { [HarmonyTranspiler] static IEnumerable<CodeInstruction> T(IEnumerable<CodeInstruction> i) => NecklaceEffectIL.Rewrite(i); }
-
-[HarmonyPatch(typeof(FollowerBrain), "Tick", new[] { typeof(float) })]                   // Weird (rot), Winter (snowman)
-internal static class Patch_FollowerBrain_Tick { [HarmonyTranspiler] static IEnumerable<CodeInstruction> T(IEnumerable<CodeInstruction> i) => NecklaceEffectIL.Rewrite(i); }
-
-[HarmonyPatch(typeof(FollowerBrain), "Die", new[] { typeof(NotificationCentre.NotificationType) })] // Deaths_Door
-internal static class Patch_FollowerBrain_Die { [HarmonyTranspiler] static IEnumerable<CodeInstruction> T(IEnumerable<CodeInstruction> i) => NecklaceEffectIL.Rewrite(i); }
-
-[HarmonyPatch(typeof(FollowerBrain), "MakeDissenter", new[] { typeof(bool) })]           // Loyalty
-internal static class Patch_FollowerBrain_MakeDissenter { [HarmonyTranspiler] static IEnumerable<CodeInstruction> T(IEnumerable<CodeInstruction> i) => NecklaceEffectIL.Rewrite(i); }
-
-[HarmonyPatch(typeof(FollowerBrain), "GetPersonalTask", new[] { typeof(FollowerLocation) })] // sleep (Necklace_5)
-internal static class Patch_FollowerBrain_GetPersonalTask { [HarmonyTranspiler] static IEnumerable<CodeInstruction> T(IEnumerable<CodeInstruction> i) => NecklaceEffectIL.Rewrite(i); }
-
-[HarmonyPatch(typeof(FollowerBrain), "RandomAvailableBrainToFreeze")]                    // Targeted
-internal static class Patch_FollowerBrain_RandomFreeze { [HarmonyTranspiler] static IEnumerable<CodeInstruction> T(IEnumerable<CodeInstruction> i) => NecklaceEffectIL.Rewrite(i); }
-
-[HarmonyPatch(typeof(FollowerBrain), "GetAvailableBrainsWithNecklaceTargeted")]          // Targeted
-internal static class Patch_FollowerBrain_TargetedList { [HarmonyTranspiler] static IEnumerable<CodeInstruction> T(IEnumerable<CodeInstruction> i) => NecklaceEffectIL.Rewrite(i); }
-
-[HarmonyPatch(typeof(FollowerBrainInfo), "LifeExpectancy", MethodType.Getter)]           // lifespan x2 (Necklace_3)
-internal static class Patch_FollowerBrainInfo_LifeExpectancy { [HarmonyTranspiler] static IEnumerable<CodeInstruction> T(IEnumerable<CodeInstruction> i) => NecklaceEffectIL.Rewrite(i); }
-
-[HarmonyPatch(typeof(FollowerBrainInfo), "ProductivityMultiplier", MethodType.Getter)]   // Winter productivity
-internal static class Patch_FollowerBrainInfo_Productivity { [HarmonyTranspiler] static IEnumerable<CodeInstruction> T(IEnumerable<CodeInstruction> i) => NecklaceEffectIL.Rewrite(i); }

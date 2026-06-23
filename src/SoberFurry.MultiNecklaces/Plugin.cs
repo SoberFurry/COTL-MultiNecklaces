@@ -36,7 +36,8 @@ public sealed class Plugin : BaseUnityPlugin
             Localizer.Init(Log);
 
             _harmony = new Harmony(Guid);
-            _harmony.PatchAll(typeof(Plugin).Assembly); // discovers all [HarmonyPatch] classes (incl. effect-stacking IL patches)
+            _harmony.PatchAll(typeof(Plugin).Assembly); // wheel / gift / butcher / save / summary patches
+            Patches.NecklaceEffectAutoPatch.ApplyAll(_harmony); // blanket hidden-effect stacking
 
             ManagementUI.Create();
 

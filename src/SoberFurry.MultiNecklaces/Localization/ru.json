@@ -1,4 +1,12 @@
 {
+  "settings.category": "Ожерелья",
+  "settings.enabled": "Включён",
+  "settings.effectstacking": "Стак эффектов скрытых ожерелий",
+  "settings.confirmunequip": "Подтверждать снятие редких",
+  "settings.verbose": "Подробный лог",
+  "settings.maxunique": "Макс. ожерелий (0 = без лимита)",
+  "settings.butcher": "Возврат ожерелий при разделке",
+  "settings.unknownpolicy": "Неизвестные ожерелья",
   "panel.title": "Ожерелья",
   "panel.empty": "Ожерелья не надеты",
   "panel.equipped": "Надетые ожерелья",

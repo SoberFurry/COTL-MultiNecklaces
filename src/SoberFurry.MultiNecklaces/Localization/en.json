@@ -1,4 +1,12 @@
 {
+  "settings.category": "Necklaces",
+  "settings.enabled": "Enabled",
+  "settings.effectstacking": "Stack hidden necklace effects",
+  "settings.confirmunequip": "Confirm rare unequip",
+  "settings.verbose": "Verbose logging",
+  "settings.maxunique": "Max necklaces (0 = unlimited)",
+  "settings.butcher": "Butcher return mode",
+  "settings.unknownpolicy": "Unknown necklace policy",
   "panel.title": "Necklaces",
   "panel.empty": "No necklaces equipped",
   "panel.equipped": "Equipped",
