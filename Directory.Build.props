@@ -34,8 +34,9 @@
     <BepInExPlugins>$(GamePath)\BepInEx\plugins</BepInExPlugins>
   </PropertyGroup>
 
-  <!-- Define the COTL_API compile symbol only when the API is installed (optional integration). -->
-  <PropertyGroup Condition="Exists('$(BepInExPlugins)\io.github.xhayper.COTL_API\COTL_API.dll')">
+  <!-- Define the COTL_API compile symbol only when the API is installed (optional integration).
+       Pass -p:ForceNoCotlApi=true to build a universal DLL with no COTL_API reference (public releases). -->
+  <PropertyGroup Condition="'$(ForceNoCotlApi)' != 'true' And Exists('$(BepInExPlugins)\io.github.xhayper.COTL_API\COTL_API.dll')">
     <DefineConstants>$(DefineConstants);COTL_API</DefineConstants>
   </PropertyGroup>
 
