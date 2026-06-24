@@ -24,7 +24,6 @@ internal sealed class PluginConfig
     public readonly ConfigEntry<UnknownPolicy> UnknownNecklacePolicy;
     public readonly ConfigEntry<bool> EffectStacking;
     public readonly ConfigEntry<bool> VerboseLogging;
-    public readonly ConfigEntry<KeyCode> PanelHotkey;
     public readonly ConfigEntry<bool> UseInGameSettings;
 
     public PluginConfig(ConfigFile cfg)
@@ -48,9 +47,6 @@ internal sealed class PluginConfig
             "Apply the effects of HIDDEN necklaces too (currently: Demonic demon-level, Gold_Skull immortality).");
 
         VerboseLogging = cfg.Bind("Diagnostics", "VerboseLogging", false, "Extra diagnostic logging.");
-
-        PanelHotkey = cfg.Bind("UI", "PanelHotkey", KeyCode.F8,
-            "Toggles the necklace management panel for the follower nearest the player.");
 
         UseInGameSettings = cfg.Bind("UI", "UseInGameSettings", false,
             "Register settings into COTL_API's in-game 'Mods' tab. OFF by default: on some game builds " +

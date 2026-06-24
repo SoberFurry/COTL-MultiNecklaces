@@ -46,12 +46,14 @@ internal static class NecklaceWheelPatches
     private sealed class WheelGroup : CommandItem
     {
         public InventoryItem.ITEM_TYPE IconType = InventoryItem.ITEM_TYPE.NONE;
+        public string IconName = ""; // explicit glyph override (used for the empty-state placeholder)
         public string Title = "";
         public string Desc = "";
         public override string GetTitle(Follower follower) => Title;
         public override string GetDescription(Follower follower) => Desc;
         public override string GetIcon() =>
-            IconType == InventoryItem.ITEM_TYPE.NONE ? base.GetIcon() : FontImageNames.GetIconByType(IconType);
+            !string.IsNullOrEmpty(IconName) ? IconName
+            : IconType == InventoryItem.ITEM_TYPE.NONE ? base.GetIcon() : FontImageNames.GetIconByType(IconType);
         // SubCommand (inherited) drives GetSubIcon() -> eye / crossed-eye overlay.
     }
 
@@ -69,8 +71,8 @@ internal static class NecklaceWheelPatches
             svc.EnsureImported(info);
             svc.ApplyVisibleToVanilla(info); // reconcile model to our data right before showing the menu
             var entries = svc.GetEntries(info.ID);
-            if (entries.Count == 0) return;
 
+            // Necklaces are managed ONLY through our entry: drop the vanilla necklace commands from the wheel.
             __result.RemoveAll(c => c is FollowerCommandItems.RemoveNecklaceCommandItem
                                  || c is FollowerCommandItems.HideNecklaceCommandItem
                                  || c is FollowerCommandItems.ShowNecklaceCommandItem);
@@ -136,12 +138,15 @@ internal static class NecklaceWheelPatches
                 });
             }
 
+            var rootType = svc.GetVisibleOrLast(info.ID) ?? FirstType(entries);
             __result.Add(new WheelGroup
             {
                 Command = (FollowerCommands)GroupBase,
-                IconType = svc.GetVisibleOrLast(info.ID) ?? FirstType(entries),
+                // When nothing is equipped, show a generic necklace glyph so the entry is always present.
+                IconType = entries.Count > 0 ? rootType : InventoryItem.ITEM_TYPE.NONE,
+                IconName = entries.Count > 0 ? "" : FontImageNames.RemoveNecklace,
                 Title = L("wheel.title"),
-                Desc = L("wheel.rootdesc"),
+                Desc = entries.Count > 0 ? L("wheel.rootdesc") : L("wheel.emptydesc"),
                 SubCommands = perNecklace
             });
         }
@@ -150,6 +155,20 @@ internal static class NecklaceWheelPatches
             Plugin.Log.LogError($"DefaultCommands postfix failed (wheel left vanilla): {ex}");
         }
     }
+
+    // The vanilla Show/Hide/Remove-necklace actions live in the "make a demand" submenu (and a few
+    // special-state menus). We manage necklaces only through our own "Necklaces" entry, so strip them.
+    private static void StripVanillaNecklace(List<CommandItem>? result)
+    {
+        if (result == null || !Plugin.Cfg.Enabled.Value) return;
+        result.RemoveAll(c => c is FollowerCommandItems.RemoveNecklaceCommandItem
+                           || c is FollowerCommandItems.HideNecklaceCommandItem
+                           || c is FollowerCommandItems.ShowNecklaceCommandItem);
+    }
+
+    [HarmonyPatch(typeof(FollowerCommandGroups), nameof(FollowerCommandGroups.MakeDemandCommands))]
+    [HarmonyPostfix]
+    private static void MakeDemandCommands_Postfix(ref List<CommandItem> __result) => StripVanillaNecklace(__result);
 
     [HarmonyPatch(typeof(interaction_FollowerInteraction), "OnFollowerCommandFinalized")]
     [HarmonyPrefix]

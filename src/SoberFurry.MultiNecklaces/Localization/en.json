@@ -34,6 +34,7 @@
   "err.limit": "Necklace limit reached",
   "wheel.title": "Necklaces",
   "wheel.rootdesc": "Manage equipped necklaces",
+  "wheel.emptydesc": "No necklaces yet — gift the first one",
   "wheel.show": "Make visible",
   "wheel.hide": "Hide",
   "wheel.remove": "Remove",

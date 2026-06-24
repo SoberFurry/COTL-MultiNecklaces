@@ -4,7 +4,6 @@ using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
 using SoberFurry.MultiNecklaces.Core;
-using SoberFurry.MultiNecklaces.UI;
 using UnityEngine;
 
 #pragma warning disable CS0618
@@ -39,7 +38,7 @@ public sealed class Plugin : BaseUnityPlugin
             _harmony.PatchAll(typeof(Plugin).Assembly); // wheel / gift / butcher / save / summary patches
             Patches.NecklaceEffectAutoPatch.ApplyAll(_harmony); // blanket hidden-effect stacking
 
-            ManagementUI.Create();
+            // F8 management panel removed - necklaces are managed entirely through the radial wheel now.
 
 #if COTL_API
             CotlApiIntegration.TryRegisterSettings(); // optional: in-game "Mods" tab if COTL_API present
@@ -51,7 +50,7 @@ public sealed class Plugin : BaseUnityPlugin
             int patched = 0;
             foreach (var _ in _harmony.GetPatchedMethods()) patched++;
             Log.LogInfo($"[{LogPrefix}] loaded. Enabled={Cfg.Enabled.Value}, EffectStacking={Cfg.EffectStacking.Value}, " +
-                        $"MaxUnique={Cfg.MaximumUniqueNecklaces.Value}, PanelHotkey={Cfg.PanelHotkey.Value}, patchedMethods={patched}. " +
+                        $"MaxUnique={Cfg.MaximumUniqueNecklaces.Value}, patchedMethods={patched}. " +
                         $"Necklace types in build: {NecklaceTypes.All.Count}.");
         }
         catch (Exception e)
